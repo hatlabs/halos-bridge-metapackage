@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # Install embedded GPG key for apt.halos.fi
+        gpg --dearmor < /usr/share/halos-bridge-metapackage/halos-apt-key.asc \
+            > /etc/apt/trusted.gpg.d/halos.gpg
+        chmod 644 /etc/apt/trusted.gpg.d/halos.gpg
+
+        # Detect distro and add apt.halos.fi source
+        . /etc/os-release
+        DISTRO="${VERSION_CODENAME:-trixie}"
+        echo "deb https://apt.halos.fi ${DISTRO}-stable main" \
+            > /etc/apt/sources.list.d/halos.list
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

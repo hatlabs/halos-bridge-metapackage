@@ -1,0 +1,5 @@
+# Bridge metapackage intentionally has no manpage
+halos-marine: no-manual-page
+
+# Bridge metapackage - initial upload
+halos-marine: initial-upload-closes-no-bugs

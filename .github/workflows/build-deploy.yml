@@ -1,0 +1,116 @@
+name: Build and Deploy Bridge Packages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev debhelper lintian
+
+      - name: Build halos bridge package
+        run: |
+          cd halos
+          dpkg-buildpackage -us -uc -b
+          cd ..
+          echo "Built halos bridge package:"
+          ls -la halos_*.deb
+
+      - name: Build halos-marine bridge package
+        run: |
+          cd halos-marine
+          dpkg-buildpackage -us -uc -b
+          cd ..
+          echo "Built halos-marine bridge package:"
+          ls -la halos-marine_*.deb
+
+      - name: Run lintian checks
+        run: |
+          echo "Running lintian on bridge packages..."
+          for deb in *.deb; do
+            if [ -f "$deb" ]; then
+              echo ""
+              echo "=== Checking: $deb ==="
+              lintian --info --display-info --fail-on error,warning "$deb" || true
+            fi
+          done
+
+      - name: Rename packages with distro+component suffix
+        run: |
+          # Add suffix for apt.hatlabs.fi routing: trixie+main
+          for deb in *.deb; do
+            if [ -f "$deb" ]; then
+              new_name="${deb%.deb}+any+main.deb"
+              echo "Renaming: $deb -> $new_name"
+              mv "$deb" "$new_name"
+            fi
+          done
+
+      - name: Create release
+        run: |
+          TAG="v0.2.11+1"
+
+          # Check if release already exists
+          if gh release view "$TAG" &>/dev/null; then
+            echo "Release $TAG already exists, deleting..."
+            gh release delete "$TAG" --yes
+            git push --delete origin "$TAG" 2>/dev/null || true
+          fi
+
+          echo "Creating release $TAG..."
+          gh release create "$TAG" \
+            --title "Bridge packages v0.2.11-1" \
+            --notes "$(cat <<'NOTES_EOF'
+          ## Bridge Metapackages for APT Repository Migration
+
+          These bridge packages facilitate the migration from `apt.hatlabs.fi` to `apt.halos.fi`.
+
+          **How it works:**
+          1. `apt upgrade` installs bridge halos 0.2.11-1 from apt.hatlabs.fi
+          2. Bridge postinst adds apt.halos.fi GPG key and APT source
+          3. Next `apt update && apt upgrade` upgrades to halos 0.3.0+ from apt.halos.fi
+
+          **Packages:**
+          - `halos` 0.2.11-1 - Bridge with identical deps to halos 0.2.10
+          - `halos-marine` 0.2.11-1 - Bridge with identical deps to halos-marine 0.2.10
+          NOTES_EOF
+          )" \
+            *.deb
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Dispatch to apt.hatlabs.fi
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.APT_REPO_PAT }}
+          repository: hatlabs/apt.hatlabs.fi
+          event-type: package-updated
+          client-payload: |
+            {
+              "repository": "${{ github.repository }}",
+              "distro": "any",
+              "channel": "stable",
+              "component": "main"
+            }
+
+      - name: Report success
+        run: |
+          echo "=== Bridge Package Build Complete ==="
+          echo "Packages built and released."
+          echo "Dispatched to apt.hatlabs.fi stable channel."
+          echo ""
+          echo "Existing installations will pick up these bridge"
+          echo "packages on their next apt upgrade cycle."

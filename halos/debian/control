@@ -1,0 +1,37 @@
+Source: halos
+Section: metapackages
+Priority: optional
+Maintainer: Hat Labs <info@hatlabs.fi>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/hatlabs/halos-bridge-metapackage
+Rules-Requires-Root: no
+
+Package: halos
+Architecture: all
+Depends: ${misc:Depends},
+         cockpit,
+         cockpit-networkmanager,
+         cockpit-networkmanager-halos,
+         cockpit-storaged,
+         cockpit-apt,
+         cockpit-authelia-users,
+         cockpit-dockermanager,
+         cockpit-container-apps,
+         halos-cockpit-config,
+         docker.io (>= 20.10) | docker-ce (>= 20.10),
+         docker-compose | docker-compose-plugin,
+         docker-cli,
+         halos-core-containers,
+         homarr-container-adapter,
+         halos-mdns-publisher
+Description: Bridge metapackage for HaLOS APT repository migration
+ This is a transitional bridge package that migrates the APT source
+ from apt.hatlabs.fi to apt.halos.fi.
+ .
+ On installation, it adds the apt.halos.fi GPG key and APT source.
+ On the next apt update && apt upgrade, the system will upgrade to
+ the halos package from apt.halos.fi (version 0.3.0+).
+ .
+ This package has identical dependencies to halos 0.2.10 to prevent
+ any packages from being auto-removed during the transition.

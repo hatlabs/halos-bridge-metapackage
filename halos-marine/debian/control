@@ -1,0 +1,23 @@
+Source: halos-marine
+Section: metapackages
+Priority: optional
+Maintainer: Hat Labs <info@hatlabs.fi>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/hatlabs/halos-bridge-metapackage
+Rules-Requires-Root: no
+
+Package: halos-marine
+Architecture: all
+Depends: ${misc:Depends},
+         halos (>= ${binary:Version}),
+         gpsd,
+         marine-container-store,
+         marine-signalk-server-container
+Description: Bridge metapackage for HaLOS marine APT repository migration
+ This is a transitional bridge package for halos-marine that maintains
+ identical dependencies to halos-marine 0.2.10 during the migration
+ from apt.hatlabs.fi to apt.halos.fi.
+ .
+ This package has identical dependencies to halos-marine 0.2.10 to prevent
+ any packages from being auto-removed during the transition.
