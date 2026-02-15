@@ -3,4 +3,4 @@ halos-marine (0.2.11-1) unstable; urgency=medium
   * Bridge package for APT repository migration from apt.hatlabs.fi to
     apt.halos.fi
 
- -- Hat Labs <info@hatlabs.fi>  Fri, 14 Feb 2026 22:00:00 +0200
+ -- Hat Labs <info@hatlabs.fi>  Sat, 14 Feb 2026 22:00:00 +0200

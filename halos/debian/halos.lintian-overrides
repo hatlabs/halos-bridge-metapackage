@@ -1,5 +1,2 @@
-# Bridge metapackage intentionally has no manpage
-halos: no-manual-page
-
 # Bridge metapackage - initial upload
 halos: initial-upload-closes-no-bugs

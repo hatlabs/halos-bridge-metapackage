@@ -1,0 +1,8 @@
+name: 'Run Tests'
+description: 'Build packages to verify they compile correctly'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Build packages (test)
+      uses: ./.github/actions/build-deb
