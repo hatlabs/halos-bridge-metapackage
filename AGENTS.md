@@ -4,7 +4,7 @@
 
 ## For Agentic Coding: Use the HaLOS Workspace
 
-**IMPORTANT**: Work from the halos-distro workspace for full context.
+**IMPORTANT**: Work from the halos workspace for full context.
 
 ## About This Project
 
@@ -40,7 +40,7 @@ halos-bridge-metapackage/
 
 **Branch Workflow**: Never push to main - use feature branches and PRs.
 
-See `halos-distro/docs/DEVELOPMENT_WORKFLOW.md` for detailed workflows.
+See `halos/docs/DEVELOPMENT_WORKFLOW.md` for detailed workflows.
 
 ## Version Management
 
