@@ -1,0 +1,22 @@
+# Build artifacts
+*.deb
+*.buildinfo
+*.changes
+*.dsc
+*.tar.gz
+*.tar.xz
+
+# Debian build directories
+halos/debian/.debhelper/
+halos/debian/halos/
+halos/debian/debhelper-build-stamp
+halos/debian/files
+halos/debian/*.substvars
+halos/debian/*.log
+
+halos-marine/debian/.debhelper/
+halos-marine/debian/halos-marine/
+halos-marine/debian/debhelper-build-stamp
+halos-marine/debian/files
+halos-marine/debian/*.substvars
+halos-marine/debian/*.log
