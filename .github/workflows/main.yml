@@ -18,7 +18,7 @@ jobs:
     with:
       package-name: halos
       package-description: 'HaLOS bridge metapackages for APT repository migration'
-      apt-distro: any
+      apt-distro: trixie
       apt-component: main
     secrets:
       APT_REPO_PAT: ${{ secrets.APT_REPO_PAT }}
