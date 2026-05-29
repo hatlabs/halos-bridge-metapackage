@@ -59,4 +59,4 @@ git push
 
 Requires `bump2version` installed (`pip install bump2version`).
 
-**CI Enforcement**: PRs that change package-affecting files must include a VERSION bump or CI will fail.
+**CI Enforcement**: VERSION bumps are per release cycle, not per PR — CI fails only on the PR that opens a new cycle (when VERSION still matches the latest stable release and the PR touches package-affecting files); later PRs in the same cycle must not bump. See the workspace `AGENTS.md` version-bump policy for the full decision procedure.
